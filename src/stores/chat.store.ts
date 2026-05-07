@@ -30,14 +30,14 @@ export const useChatStore = defineStore('chat', () => {
 
   const messages = ref<Message[]>([
     {
-      id: crypto.randomUUID(),
+      id: createId(),
       chatId: '1',
       author: 'bot',
       text: 'Привет! Это общий чат.',
       createdAt: new Date().toISOString(),
     },
     {
-      id: crypto.randomUUID(),
+      id: createId(),
       chatId: '2',
       author: 'bot',
       text: 'Добро пожаловать в чат Syntax.ai!',
@@ -74,7 +74,7 @@ export const useChatStore = defineStore('chat', () => {
     await delay(400)
 
     messages.value.push({
-      id: crypto.randomUUID(),
+      id: createId(),
       chatId,
       author: 'user',
       text: normalizedText,
@@ -88,7 +88,7 @@ export const useChatStore = defineStore('chat', () => {
     await delay(1200)
 
     messages.value.push({
-      id: crypto.randomUUID(),
+      id: createId(),
       chatId,
       author: 'bot',
       text,
@@ -96,12 +96,20 @@ export const useChatStore = defineStore('chat', () => {
     })
   }
 
+  function createId() {
+  if (crypto?.randomUUID) {
+    return crypto.randomUUID()
+  }
+
+  return `${Date.now()}-${Math.random().toString(36).slice(2)}`
+}
+
   function createChat(title: string) {
     const normalizedTitle = title.trim()
     if (!normalizedTitle) return
 
     const chat: Chat = {
-      id: crypto.randomUUID(),
+      id: createId(),
       title: normalizedTitle,
       isFavorite: false,
     }
